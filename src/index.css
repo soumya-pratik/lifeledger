@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  min-height: 100dvh;
+}
+
+:root {
+  --ll-bg: #f4f6fb;
+  --ll-surface: #ffffff;
+  --ll-text: #0f172a;
+  --ll-muted: #64748b;
+  --ll-accent: #0284c7;
+  --ll-accent-fg: #f8fafc;
+  --ll-border: #e2e8f0;
+  --ll-header: #ffffff;
+  --ll-nav: #ffffff;
+  --ll-danger: #e11d48;
+  --ll-warn: #b45309;
+  --ll-success: #047857;
+  --ll-overlay: rgba(15, 23, 42, 0.4);
+}
+
+body {
+  @apply antialiased bg-ll-bg text-ll-text;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  color: inherit;
+  background-color: var(--ll-bg);
+}
