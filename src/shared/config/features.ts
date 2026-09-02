@@ -13,8 +13,9 @@ export type AppFeature = {
 };
 
 /**
- * Single registry for left nav + home cards.
- * Later: replace APP_FEATURES with GET /features (same shape).
+ * Catalog of LifeLedger submodules for nav + home.
+ * `enabled` is global today. Per-user on/off is D01 intent (see docs/log/2026-09-02-super-app-modules.md).
+ * Later: load the same AppFeature shape from GET /features, then intersect with the user's module flags.
  */
 export const APP_FEATURES: AppFeature[] = [
   {
@@ -31,7 +32,7 @@ export const APP_FEATURES: AppFeature[] = [
   {
     id: "expenses",
     title: "Expense tracker",
-    description: "Log spends, import bank statements, and review a month.",
+    description: "Log spends, import statements, and see spending patterns.",
     path: "/expenses",
     icon: "wallet",
     order: 1,

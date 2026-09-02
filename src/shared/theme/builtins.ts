@@ -23,6 +23,7 @@ export const lightTheme: ThemeDefinition = {
     "--ll-warn": "#b45309",
     "--ll-success": "#047857",
     "--ll-overlay": "rgba(15, 23, 42, 0.4)",
+    "--ll-shadow": "0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04)",
   },
 };
 
@@ -44,6 +45,7 @@ export const darkTheme: ThemeDefinition = {
     "--ll-warn": "#fbbf24",
     "--ll-success": "#34d399",
     "--ll-overlay": "rgba(0, 0, 0, 0.5)",
+    "--ll-shadow": "0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.25)",
   },
 };
 

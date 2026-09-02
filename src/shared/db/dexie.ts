@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { Expense, ExpenseProposal } from "@/shared/domain/expense";
+import type { IncomeEntry } from "@/shared/domain/income";
 import type { Category, Ledger, LedgerMember } from "@/shared/domain/ledger";
 
 export type SessionRow = {
@@ -36,6 +37,7 @@ class LifeLedgerDb extends Dexie {
   categories!: EntityTable<Category, "id">;
   expenses!: EntityTable<Expense, "id">;
   proposals!: EntityTable<ExpenseProposal, "id">;
+  incomes!: EntityTable<IncomeEntry, "id">;
   importBatches!: EntityTable<ImportBatchRow, "id">;
   outbox!: EntityTable<OutboxRow, "id">;
 
@@ -50,6 +52,9 @@ class LifeLedgerDb extends Dexie {
       proposals: "id, ledgerId, importBatchId, status, fingerprint",
       importBatches: "id, ledgerId, createdAt",
       outbox: "id, createdAt",
+    });
+    this.version(2).stores({
+      incomes: "id, ledgerId, month, [ledgerId+month]",
     });
   }
 }

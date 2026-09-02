@@ -7,6 +7,7 @@ import { SettingsPage } from "@/app/SettingsPage";
 import { ExpensesPage } from "@/features/expenses/screens/ExpensesPage";
 import { ImportPage } from "@/features/imports/screens/ImportPage";
 import { ExpensesLayout } from "@/features/expenses/screens/ExpensesLayout";
+import { InsightsPage } from "@/features/expenses/screens/InsightsPage";
 
 export function App() {
   return (
@@ -23,7 +24,9 @@ export function App() {
         <Route path="expenses" element={<ExpensesLayout />}>
           <Route index element={<ExpensesPage />} />
           <Route path="import" element={<ImportPage />} />
+          <Route path="insights" element={<InsightsPage />} />
         </Route>
+        <Route path="insights" element={<Navigate to="/expenses/insights" replace />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

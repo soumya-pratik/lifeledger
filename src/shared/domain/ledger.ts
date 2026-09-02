@@ -1,3 +1,5 @@
+import type { CategoryIconId } from "@/shared/domain/categoryIcon";
+
 export type LedgerKind = "personal" | "shared";
 export type MemberRole = "owner" | "editor" | "viewer";
 
@@ -23,15 +25,16 @@ export type Category = {
   ledgerId: string;
   name: string;
   kind: "need" | "want" | "unspecified";
+  icon: CategoryIconId;
   archivedAt: string | null;
 };
 
-export const DEFAULT_CATEGORIES: { name: string; kind: Category["kind"] }[] = [
-  { name: "Food", kind: "need" },
-  { name: "Transport", kind: "need" },
-  { name: "Rent", kind: "need" },
-  { name: "Utilities", kind: "need" },
-  { name: "Health", kind: "need" },
-  { name: "Transfer", kind: "unspecified" },
-  { name: "Other", kind: "unspecified" },
+export const DEFAULT_CATEGORIES: { name: string; kind: Category["kind"]; icon: CategoryIconId }[] = [
+  { name: "Food", kind: "need", icon: "utensils" },
+  { name: "Transport", kind: "need", icon: "bus" },
+  { name: "House Emi", kind: "need", icon: "home" },
+  { name: "Utilities", kind: "need", icon: "bolt" },
+  { name: "Health", kind: "need", icon: "heart" },
+  { name: "Transfer", kind: "unspecified", icon: "arrows" },
+  { name: "Other", kind: "unspecified", icon: "tag" },
 ];

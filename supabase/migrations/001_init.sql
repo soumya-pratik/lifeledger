@@ -42,6 +42,7 @@ create table public.expense_categories (
   ledger_id uuid not null references public.ledgers (id) on delete cascade,
   name text not null,
   kind text not null default 'unspecified' check (kind in ('need', 'want', 'unspecified')),
+  icon text not null default 'tag',
   archived_at timestamptz
 );
 

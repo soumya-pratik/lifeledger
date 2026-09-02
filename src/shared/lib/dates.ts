@@ -20,6 +20,31 @@ export function monthLabel(ym: string): string {
   });
 }
 
+export function addMonths(ym: string, delta: number): string {
+  const [y, m] = ym.split("-").map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+}
+
+export function monthsBackInclusive(ym: string, count: number): string[] {
+  return Array.from({ length: count }, (_, i) => addMonths(ym, i - (count - 1)));
+}
+
+export function daysInMonth(ym: string): number {
+  const [y, m] = ym.split("-").map(Number);
+  return new Date(y, m, 0).getDate();
+}
+
+export function weekdaySun0(isoDate: string): number {
+  return new Date(`${isoDate}T12:00:00`).getDay();
+}
+
+export function shortMonthLabel(ym: string): string {
+  const [y, m] = ym.split("-").map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString("en-IN", { month: "short" });
+}
+
 export function inMonth(isoDate: string, ym: string): boolean {
   return monthKey(isoDate) === ym;
 }

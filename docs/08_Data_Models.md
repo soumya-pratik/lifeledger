@@ -34,7 +34,7 @@ CamelCase in TypeScript / Dexie. snake_case in Postgres. Same meaning.
 
 - `id`, `ledgerId`, `name`, `kind`, `archivedAt` null or ISO
 
-**Seed names:** Food, Transport, Rent, Utilities, Health, Transfer, Other with kinds need/need/need/need/need/unspecified/unspecified.
+**Seed names:** Food, Transport, House Emi, Utilities, Health, Transfer, Other with kinds need/need/need/need/need/unspecified/unspecified.
 
 ## ExpenseDraft (shared contract)
 

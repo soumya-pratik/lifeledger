@@ -2,7 +2,7 @@
 
 ## Purpose
 
-LifeLedger is a **personal life journal** delivered as an installable web app. The first product slice is **expense tracking** with optional **bank-statement import** and **LLM-assisted monthly commentary**. Other life areas are planned as additional feature modules on the same ledger, not a rewrite.
+LifeLedger is a **super-app** (installable PWA): one shell, one identity, one sync story. Life areas are **submodules** — the first is **expense tracking** (manual capture, bank-statement import, spending patterns, optional LLM month review). New modules are always submodules of LifeLedger, never a second app. Which modules a user sees is **configurable per user** (intent; not wired yet). Expense rows still live on a **ledger** (household tenancy), not on the user id alone.
 
 ## Target users
 
