@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSession } from "@/shared/auth/SessionProvider";
 import { hasLlmKey, saveLlmKey } from "@/features/imports/llm";
 import { useTheme } from "@/shared/theme/ThemeProvider";
+import { GhostButton, PageHeader, PrimaryButton, Surface } from "@/shared/ui/chrome";
 
 export function SettingsPage() {
   const { email, displayName, ledgers, ledger, switchLedger } = useSession();
@@ -11,16 +12,16 @@ export function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight">Settings</h1>
+      <PageHeader kicker="Account" title="Settings" description="Theme, ledger, and optional LLM key for this browser." />
 
-      <section className="rounded-2xl border border-ll-border bg-ll-surface p-4 text-sm">
-        <h2 className="font-semibold">Account</h2>
-        <p className="mt-2 text-ll-text">{displayName}</p>
+      <Surface className="text-sm">
+        <h2 className="text-sm font-semibold">Profile</h2>
+        <p className="mt-3 text-base font-medium text-ll-text">{displayName}</p>
         <p className="mt-1 text-ll-muted">{email}</p>
-        <p className="mt-1 text-xs text-ll-muted">Signed in with Google via Supabase.</p>
-      </section>
+        <p className="mt-2 text-xs text-ll-muted">Signed in with Google via Supabase.</p>
+      </Surface>
 
-      <section className="rounded-2xl border border-ll-border bg-ll-surface p-4">
+      <Surface>
         <h2 className="text-sm font-semibold">Theme</h2>
         <p className="mt-1 text-xs text-ll-muted">
           Builtin light/dark now. Remote packs from the backend can appear in this list later.
@@ -28,7 +29,7 @@ export function SettingsPage() {
         <select
           value={theme.id}
           onChange={(e) => void setTheme(e.target.value)}
-          className="mt-3 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2 text-sm"
+          className="mt-4 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2.5 text-sm"
         >
           {themes.map((t) => (
             <option key={t.id} value={t.id}>
@@ -37,15 +38,15 @@ export function SettingsPage() {
             </option>
           ))}
         </select>
-      </section>
+      </Surface>
 
       {ledgers.length > 1 ? (
-        <section className="rounded-2xl border border-ll-border bg-ll-surface p-4">
+        <Surface>
           <h2 className="text-sm font-semibold">Active ledger</h2>
           <select
             value={ledger.id}
             onChange={(e) => void switchLedger(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2 text-sm"
+            className="mt-3 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2.5 text-sm"
           >
             {ledgers.map((l) => (
               <option key={l.id} value={l.id}>
@@ -53,25 +54,23 @@ export function SettingsPage() {
               </option>
             ))}
           </select>
-        </section>
+        </Surface>
       ) : null}
 
-      <section className="rounded-2xl border border-ll-border bg-ll-surface p-4">
+      <Surface>
         <h2 className="text-sm font-semibold">LLM (BYOK)</h2>
         <p className="mt-1 text-xs text-ll-muted">
-          Stored only in this browser. Used for statement fallback extract and month review.
+          Stored only in this browser. Used for statement fallback extract, month review, and category icons.
         </p>
         <input
           type="password"
           value={key}
           onChange={(e) => setKey(e.target.value)}
           placeholder={saved ? "Key saved — paste to replace" : "sk-…"}
-          className="mt-3 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2 text-sm"
+          className="mt-4 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2.5 text-sm"
         />
-        <div className="mt-2 flex gap-2">
-          <button
-            type="button"
-            className="rounded-xl bg-ll-accent px-3 py-1.5 text-xs font-semibold text-ll-accent-fg"
+        <div className="mt-3 flex gap-2">
+          <PrimaryButton
             onClick={() => {
               saveLlmKey(key);
               setSaved(hasLlmKey());
@@ -79,19 +78,17 @@ export function SettingsPage() {
             }}
           >
             Save key
-          </button>
-          <button
-            type="button"
-            className="rounded-xl border border-ll-border px-3 py-1.5 text-xs text-ll-muted"
+          </PrimaryButton>
+          <GhostButton
             onClick={() => {
               saveLlmKey("");
               setSaved(false);
             }}
           >
             Clear
-          </button>
+          </GhostButton>
         </div>
-      </section>
+      </Surface>
     </div>
   );
 }

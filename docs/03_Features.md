@@ -82,7 +82,7 @@
 
 **Rules:** Skip undated rows (warning). Prefer debit if present and > 0. Else credit > 0 is **not** an expense (skipped). Amount parse strips `₹` commas spaces.
 
-**Category guess:** substring rules (Swiggy/Zomato→Food, Uber/Ola/metro/IRCTC/petrol→Transport, rent, utilities keywords, pharmacy/apollo/hospital→Health, NEFT/IMPS/self→Transfer, else Other).
+**Category guess:** substring rules (Swiggy/Zomato→Food, Uber/Ola/metro/IRCTC/petrol→Transport, rent/EMI→House Emi, utilities keywords, pharmacy/apollo/hospital→Health, NEFT/IMPS/self→Transfer, else Other).
 
 **Payment:** UPI if narration matches `/upi/i`.
 

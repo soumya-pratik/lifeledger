@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/shared/auth/SessionProvider";
 import { supabase, supabaseConfigured } from "@/shared/supabase/client";
+import { GhostButton } from "@/shared/ui/chrome";
 
 export function LoginPage() {
   const auth = useAuth();
@@ -10,7 +11,7 @@ export function LoginPage() {
 
   if (auth.status === "loading") {
     return (
-      <div className="grid min-h-dvh place-items-center bg-ll-bg text-ll-muted">Signing in…</div>
+      <div className="grid min-h-dvh place-items-center bg-ll-bg text-sm text-ll-muted">Signing in…</div>
     );
   }
 
@@ -37,27 +38,28 @@ export function LoginPage() {
 
   return (
     <div className="grid min-h-dvh place-items-center bg-ll-bg px-4 text-ll-text">
-      <div className="w-full max-w-sm rounded-2xl border border-ll-border bg-ll-surface p-8 shadow-sm">
-        <p className="text-[11px] uppercase tracking-[0.2em] text-ll-accent">LifeLedger</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight">Sign in</h1>
-        <p className="mt-2 text-sm text-ll-muted">Use your Google account (Gmail) to continue.</p>
+      <div className="w-full max-w-md rounded-2xl border border-ll-border bg-ll-surface p-8 shadow-[var(--ll-shadow)] sm:p-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ll-accent">LifeLedger</p>
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sign in</h1>
+        <p className="mt-2 text-sm leading-relaxed text-ll-muted">
+          One shell for your life modules. Use Google (Gmail) to continue.
+        </p>
 
         {auth.status === "unconfigured" ? (
-          <p className="mt-6 text-sm text-ll-warn">
+          <p className="mt-8 rounded-xl bg-ll-bg px-4 py-3 text-sm text-ll-warn">
             Supabase is not configured. Copy <code className="text-ll-text">.env.example</code> to{" "}
             <code className="text-ll-text">.env</code>, add the project URL and anon key, enable Google
             in Supabase Auth, then restart the dev server.
           </p>
         ) : (
-          <button
-            type="button"
+          <GhostButton
             disabled={busy}
             onClick={() => void onGoogle()}
-            className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-ll-border bg-ll-bg px-4 py-3 text-sm font-medium hover:bg-ll-surface disabled:opacity-50"
+            className="mt-8 w-full gap-3"
           >
             <GoogleMark />
             {busy ? "Redirecting…" : "Continue with Google"}
-          </button>
+          </GhostButton>
         )}
 
         {error ? <p className="mt-4 text-sm text-ll-danger">{error}</p> : null}

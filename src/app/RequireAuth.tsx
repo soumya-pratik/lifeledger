@@ -7,7 +7,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
 
   if (auth.status === "loading") {
     return (
-      <div className="grid min-h-dvh place-items-center bg-ll-bg text-ll-muted">Loading…</div>
+      <div className="grid min-h-dvh place-items-center bg-ll-bg text-sm text-ll-muted">Loading…</div>
     );
   }
 

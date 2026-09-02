@@ -26,7 +26,7 @@ function guessCategory(description: string, categories: Category[]): string | nu
   const rules: [string[], string][] = [
     [["swiggy", "zomato", "restaurant", "cafe", "dominos"], "Food"],
     [["uber", "ola", "metro", "irctc", "petrol", "fuel"], "Transport"],
-    [["rent"], "Rent"],
+    [["rent", "house emi", "housing loan", "home loan", "home emi"], "House Emi"],
     [["electric", "bescom", "airtel", "jio", "wifi", "gas"], "Utilities"],
     [["pharmacy", "apollo", "hospital", "clinic"], "Health"],
     [["neft", "imps", "own a/c", "self"], "Transfer"],

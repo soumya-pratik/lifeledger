@@ -33,12 +33,19 @@ export function AppSidebar({
 
   return (
     <aside
-      className={`flex h-full flex-col border-r border-ll-border bg-ll-nav ${compact ? "w-[4.25rem]" : "w-56"}`}
+      className={`flex h-full flex-col border-r border-ll-border bg-ll-nav ${compact ? "w-[4.5rem]" : "w-60"}`}
     >
-      <div className={`flex h-14 items-center border-b border-ll-border ${compact ? "justify-center px-2" : "px-3"}`}>
-        <span className={`text-xs font-semibold uppercase tracking-wider text-ll-muted ${compact ? "sr-only" : ""}`}>
-          Menu
+      <div className={`flex h-14 items-center border-b border-ll-border ${compact ? "justify-center px-2" : "px-4"}`}>
+        <span
+          className={`text-[11px] font-semibold uppercase tracking-[0.18em] text-ll-accent ${compact ? "sr-only" : ""}`}
+        >
+          LifeLedger
         </span>
+        {compact ? (
+          <span className="text-xs font-bold text-ll-accent" aria-hidden>
+            LL
+          </span>
+        ) : null}
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-2">
         {items.map((item) => {
@@ -50,8 +57,8 @@ export function AppSidebar({
               end={item.path === "/"}
               onClick={onNavigate}
               title={item.title}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${
-                active ? "bg-ll-bg text-ll-accent" : "text-ll-muted hover:bg-ll-bg hover:text-ll-text"
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${
+                active ? "bg-ll-bg text-ll-accent shadow-[var(--ll-shadow)]" : "text-ll-muted hover:bg-ll-bg hover:text-ll-text"
               } ${compact ? "justify-center px-2" : ""}`}
             >
               <FeatureIcon id={item.icon} />
@@ -63,10 +70,13 @@ export function AppSidebar({
       {variant === "desktop" ? (
         <button
           type="button"
-          className="border-t border-ll-border px-3 py-3 text-left text-xs text-ll-muted hover:text-ll-text"
+          className="flex items-center justify-center border-t border-ll-border py-3 text-ll-muted hover:bg-ll-bg hover:text-ll-text"
           onClick={toggleCollapse}
+          aria-label={compact ? "Expand menu" : "Collapse menu"}
         >
-          {compact ? "»" : "« Collapse"}
+          <span className="text-sm" aria-hidden>
+            {compact ? "›" : "‹"}
+          </span>
         </button>
       ) : null}
     </aside>

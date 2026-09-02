@@ -6,15 +6,19 @@ Status: **Accepted** means implemented or schema-ready. **Intent** means the pro
 
 ---
 
-## D01 — Product: journal platform, expenses first
+## D01 — Product: LifeLedger super-app, modules as sub-apps
 
-**Decision:** LifeLedger is a personal daily-life journal. Expense tracking is the first vertical. Later verticals (mood, health, notes) are new `src/features/<name>` modules on the same ledger, not a second app.
+**Decision:** LifeLedger is the **super-app** (one PWA, one identity, one sync story). Life areas are **submodules** registered under it — expense tracker is the first. Every new module is a submodule of LifeLedger (`src/features/<name>`), not a second app, not a sibling product.
 
-**Why:** Capture friction kills journals. One PWA, one identity, one sync story.
+**Per-user configuration (intent):** Which submodules a person sees (nav, home, routes) is **configurable per user**. Expense *data* still belongs to a **ledger** (D04). Enabling “Expense tracker” for a user does not change tenancy; it only gates the module UI.
 
-**Rejected:** Expense-only fintech clone; generic notes app with a spreadsheet tab.
+**Why:** Capture friction kills journals. One shell, many optional life areas. Users should not all be forced onto every module.
 
-**Revisit when:** A vertical needs a different tenancy model (e.g. medical records that must not sit on a household ledger).
+**Rejected:** Expense-only fintech clone; generic notes app with a spreadsheet tab; a new standalone app per vertical; hard-coding every module as always-on for all users.
+
+**Current:** [`src/shared/config/features.ts`](../src/shared/config/features.ts) is a static `APP_FEATURES` list (`enabled` is global, not per user). Comment there already points at a future `GET /features` of the same shape.
+
+**Revisit when:** A vertical needs a different tenancy model (e.g. medical records that must not sit on a household ledger); or module enablement must be per-ledger (household) instead of per-user.
 
 ---
 
@@ -167,7 +171,7 @@ Status: **Accepted** means implemented or schema-ready. **Intent** means the pro
 
 ## D13 — Categories belong to the ledger
 
-**Decision:** Seeded list: Food, Transport, Rent, Utilities, Health, Transfer, Other (need/want/unspecified). Keyword import mapping uses **names**, then resolves to ids. LLM category suggestions must use existing ids (when wired), not free-text names.
+**Decision:** Seeded list: Food, Transport, House Emi, Utilities, Health, Transfer, Other (need/want/unspecified). Keyword import mapping uses **names**, then resolves to ids. LLM category suggestions must use existing ids (when wired), not free-text names.
 
 **Why:** Household reports die if everyone invents “Groceries” vs “Food”.
 
@@ -225,7 +229,7 @@ Frontend: Cloudflare Pages (or Vercel). Backups: `pg_dump` once shared ledgers e
 
 | ID | Topic | Status |
 |----|--------|--------|
-| D01 | Journal + expenses MVP | Accepted |
+| D01 | Super-app + per-user modules | Accepted / per-user config intent |
 | D02 | Vite React TS PWA | Accepted |
 | D03 | Dexie first, Supabase later | Accepted / sync incomplete |
 | D04 | Ledger tenancy | Schema accepted / sharing UI incomplete |

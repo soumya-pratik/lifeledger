@@ -15,6 +15,14 @@ export function formatInr(amountMinor: number): string {
   return `${sign}₹${grouped}.${String(minor).padStart(2, "0")}`;
 }
 
+export function formatInrCompact(amountMinor: number): string {
+  const sign = amountMinor < 0 ? "-" : "";
+  const major = Math.abs(amountMinor) / MINOR_PER_MAJOR;
+  if (major >= 100_000) return `${sign}₹${(major / 100_000).toFixed(1)}L`;
+  if (major >= 1_000) return `${sign}₹${(major / 1_000).toFixed(1)}k`;
+  return formatInr(amountMinor);
+}
+
 export function parseAmountToMinor(raw: string): number {
   const t = raw.trim();
   if (!t) throw new Error("Amount required");

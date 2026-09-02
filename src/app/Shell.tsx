@@ -26,8 +26,8 @@ export function Shell() {
       ) : null}
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader onOpenNav={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-auto p-4 sm:p-6">
-          <div className="mx-auto w-full max-w-3xl">
+        <main className="flex-1 overflow-auto p-5 sm:p-8">
+          <div className="mx-auto w-full max-w-6xl">
             <Outlet />
           </div>
         </main>

@@ -1,0 +1,21 @@
+---
+description: Read and append docs/log for product decisions and features
+alwaysApply: true
+---
+
+# Decision and feature log
+
+Before implementing a feature or changing product behavior:
+
+1. Read [`docs/log/INDEX.md`](docs/log/INDEX.md) and any related files under [`docs/log/`](docs/log/).
+2. If the work touches stack, tenancy, money, LLM, sync, or imports vs expenses ownership, also read [`docs/DECISIONS.md`](docs/DECISIONS.md).
+
+After the work is done in the same session:
+
+1. Add `docs/log/YYYY-MM-DD-short-slug.md` using the template in [`docs/log/README.md`](docs/log/README.md).
+2. Prepend a line on [`docs/log/INDEX.md`](docs/log/INDEX.md).
+3. Do this without waiting for the user to ask.
+
+Do not silently contradict a locked ADR in `DECISIONS.md`. If the user overrides one, log it as a **decision** and name the ADR to revisit.
+
+Keep entries short and factual. Never put secrets (API keys, `.env`) in the log.

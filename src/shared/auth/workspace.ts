@@ -1,6 +1,7 @@
 import { db } from "@/shared/db/dexie";
 import { DEFAULT_CATEGORIES, type Ledger } from "@/shared/domain/ledger";
 import { newId } from "@/shared/lib/id";
+import { renameRentToHouseEmi } from "@/features/expenses/api";
 
 export type AuthProfile = {
   userId: string;
@@ -17,6 +18,7 @@ export async function ensureUserWorkspace(profile: AuthProfile): Promise<{
   ledger: Ledger;
   ledgers: Ledger[];
 }> {
+  await renameRentToHouseEmi();
   const existing = await db.session.get("current");
   if (existing?.userId === profile.userId) {
     const ledger = await db.ledgers.get(existing.activeLedgerId);
@@ -68,6 +70,7 @@ export async function ensureUserWorkspace(profile: AuthProfile): Promise<{
           ledgerId,
           name: c.name,
           kind: c.kind,
+          icon: c.icon,
           archivedAt: null,
         })),
       );
