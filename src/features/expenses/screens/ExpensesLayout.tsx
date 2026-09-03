@@ -11,7 +11,7 @@ export function ExpensesLayout() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ll-accent">Module</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">Expense tracker</h1>
         </div>
-        <nav className="flex gap-1 rounded-full border border-ll-border bg-ll-surface p-1 shadow-[var(--ll-shadow)]">
+        <nav className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-ll-border bg-ll-surface p-1 shadow-[var(--ll-shadow)] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <NavLink to="/expenses" className={tab} end>
             Ledger
           </NavLink>

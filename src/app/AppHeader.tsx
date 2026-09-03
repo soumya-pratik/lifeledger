@@ -21,7 +21,9 @@ export function AppHeader({ onOpenNav }: { onOpenNav: () => void }) {
   const initial = (displayName || email || "U").slice(0, 1).toUpperCase();
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-ll-border bg-ll-header px-4">
+    <header
+      className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-ll-border bg-ll-header px-4 pt-[env(safe-area-inset-top)]"
+    >
       <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"

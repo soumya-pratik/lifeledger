@@ -8,6 +8,21 @@ body,
   min-height: 100dvh;
 }
 
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+.shell-main {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .shell-main {
+    padding-bottom: 2rem;
+  }
+}
+
 :root {
   --ll-bg: #f4f6fb;
   --ll-surface: #ffffff;
