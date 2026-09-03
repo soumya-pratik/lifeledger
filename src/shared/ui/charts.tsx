@@ -54,8 +54,8 @@ export function DonutChart({
   return (
     <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
       <svg viewBox="0 0 160 160" className="h-40 w-40 shrink-0" role="img" aria-label="Donut chart">
-        {paths.map((p) => (
-          <path key={p.label + p.d} d={p.d} fill={p.color} />
+        {paths.map((p, i) => (
+          <path key={`${p.label}-${i}`} d={p.d} fill={p.color} />
         ))}
         {center ? (
           <text x={cx} y={cy + 4} textAnchor="middle" className="fill-ll-text" fontSize="11" fontWeight="600">
@@ -64,8 +64,8 @@ export function DonutChart({
         ) : null}
       </svg>
       <ul className="w-full space-y-1.5 text-sm">
-        {slices.map((s) => (
-          <li key={s.label} className="flex items-center justify-between gap-2">
+        {slices.map((s, i) => (
+          <li key={`${s.label}-${i}`} className="flex items-center justify-between gap-2">
             <span className="flex min-w-0 items-center gap-2">
               <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: s.color }} />
               <span className="truncate text-ll-text">{s.label}</span>

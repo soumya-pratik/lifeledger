@@ -32,10 +32,15 @@ export function InsightsPage() {
 
   const categorySlices = useMemo(() => {
     if (!data) return [];
-    const top = data.byCategory.slice(0, 6);
-    const rest = data.byCategory.slice(6).reduce((a, c) => a + c.totalMinor, 0);
+    const rows = data.byCategory.filter((c) => c.totalMinor > 0);
+    const maxSlices = 12;
+    if (rows.length <= maxSlices) {
+      return rows.map((c, i) => ({ label: c.name, value: c.totalMinor, color: chartColor(i) }));
+    }
+    const top = rows.slice(0, maxSlices - 1);
+    const rest = rows.slice(maxSlices - 1).reduce((a, c) => a + c.totalMinor, 0);
     const slices = top.map((c, i) => ({ label: c.name, value: c.totalMinor, color: chartColor(i) }));
-    if (rest > 0) slices.push({ label: "Other", value: rest, color: chartColor(6) });
+    if (rest > 0) slices.push({ label: "Other categories", value: rest, color: chartColor(maxSlices - 1) });
     return slices;
   }, [data]);
 
