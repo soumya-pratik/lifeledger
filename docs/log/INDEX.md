@@ -3,6 +3,7 @@
 Newest first. See [`README.md`](README.md) for how to append.
 
 - 2026-09-03 · feature · [Category pie chart shows all categories with spend](2026-09-03-category-pie-chart-fix.md)
+- 2026-09-03 · feature · [Mobile-ready PWA install experience](2026-09-03-mobile-pwa.md)
 - 2026-09-02 · feature · [Whole-app UI polish](2026-09-02-ui-polish.md)
 - 2026-09-02 · decision · [Income must initialize the month before expenses](2026-09-02-month-income-gate.md)
 - 2026-09-02 · decision · [LifeLedger is a super-app of per-user submodules](2026-09-02-super-app-modules.md)
