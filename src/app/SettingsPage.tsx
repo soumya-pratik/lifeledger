@@ -4,6 +4,13 @@ import { hasLlmKey, saveLlmKey } from "@/features/imports/llm";
 import { useTheme } from "@/shared/theme/ThemeProvider";
 import { GhostButton, PageHeader, PrimaryButton, Surface } from "@/shared/ui/chrome";
 
+function isStandalone(): boolean {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  );
+}
+
 export function SettingsPage() {
   const { email, displayName, ledgers, ledger, switchLedger } = useSession();
   const { theme, themes, setTheme } = useTheme();
@@ -58,7 +65,21 @@ export function SettingsPage() {
       ) : null}
 
       <Surface>
-        <h2 className="text-sm font-semibold">LLM (BYOK)</h2>
+        <h2 className="text-sm font-semibold">Install app</h2>
+        <p className="mt-1 text-xs text-ll-muted">
+          LifeLedger works as an installable app on your phone. Data stays on this device until cloud sync ships.
+        </p>
+        {isStandalone() ? (
+          <p className="mt-3 text-sm text-ll-success">Installed — you are running LifeLedger from your home screen.</p>
+        ) : (
+          <p className="mt-3 text-sm text-ll-muted">
+            On Android or desktop Chrome, use the install banner or browser menu. On iPhone, tap Share, then “Add to Home
+            Screen”.
+          </p>
+        )}
+      </Surface>
+
+      <Surface>
         <p className="mt-1 text-xs text-ll-muted">
           Stored only in this browser. Used for statement fallback extract, month review, and category icons.
         </p>

@@ -37,7 +37,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="grid min-h-dvh place-items-center bg-ll-bg px-4 text-ll-text">
+    <div className="grid min-h-dvh place-items-center bg-ll-bg px-4 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] text-ll-text">
       <div className="w-full max-w-md rounded-2xl border border-ll-border bg-ll-surface p-8 shadow-[var(--ll-shadow)] sm:p-10">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ll-accent">LifeLedger</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sign in</h1>
