@@ -22,10 +22,37 @@ Open the URL Vite prints. You must **sign in with Google** (Gmail) before the ap
    - Authorized redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
 5. Supabase → Authentication → Providers → **Google**: enable, paste Client ID and secret.
 6. Supabase → Authentication → URL configuration:
-   - Site URL: `http://localhost:5173`
-   - Redirect URLs: `http://localhost:5173/**` and your production origin.
+   - Site URL: `http://localhost:5173` locally, or your Pages URL in production
+   - Redirect URLs: `http://localhost:5173/**` and `https://<project>.pages.dev/**` (plus a custom domain if you add one)
 
 Never put `service_role` in the client.
+
+## Deploy (Cloudflare Pages)
+
+The app is a static Vite SPA. Host it on [Cloudflare Pages](https://developers.cloudflare.com/pages/) (HTTPS, needed for PWA install).
+
+1. Cloudflare Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → this repo.
+2. Build settings:
+   - **Framework preset:** Vite
+   - **Build command:** `npm run build`
+   - **Build output directory:** `dist`
+   - **Root directory:** `/`
+   - **Node:** 20+ (set `NODE_VERSION=20` if the default is older)
+3. **Environment variables** (Production, and Preview if you want Google login on preview URLs). Vite inlines these at **build** time — change them and trigger a new deploy:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY` (anon key only)
+   - Do **not** set `VITE_LLM_API_KEY`; users paste a key in Settings.
+4. After the first deploy, add the `https://<project>.pages.dev` origin to Google OAuth (JavaScript origin) and Supabase redirect URLs (step 6 above).
+5. Smoke-test: hard-reload `/`, `/expenses`, and `/settings`; sign in with Google; install from a phone.
+
+SPA deep links use [`public/_redirects`](public/_redirects) (`/*` → `/index.html`).
+
+Optional one-off from a machine (env must already be in the built `dist/`):
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name lifeledger
+```
 
 ## App shell
 
