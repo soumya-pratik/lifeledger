@@ -107,7 +107,7 @@ npm run dev
 **Build:** `npm run build` (typecheck + vite).  
 **Preview:** `npm run preview`.  
 **Tests:** none. Add vitest next to `shared/lib` and `parseCsv`.  
-**Deploy (intent):** static `dist/` to Cloudflare Pages; env vars for public Supabase anon only.  
+**Deploy:** static `dist/` to Cloudflare Pages. See README **Deploy (Cloudflare Pages)**. Env vars: public Supabase anon only (`VITE_SUPABASE_*`). `public/_redirects` serves the SPA for all paths.  
 **Cloud schema:** paste `supabase/migrations/001_init.sql` in SQL editor.  
 **PWA:** HTTPS in prod; localhost OK for SW in Vite.
 

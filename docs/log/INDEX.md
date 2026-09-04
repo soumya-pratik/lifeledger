@@ -2,6 +2,7 @@
 
 Newest first. See [`README.md`](README.md) for how to append.
 
+- 2026-09-04 · feature · [Cloudflare Pages hosting](2026-09-04-cloudflare-pages.md)
 - 2026-09-03 · feature · [Category pie chart shows all categories with spend](2026-09-03-category-pie-chart-fix.md)
 - 2026-09-03 · feature · [Mobile-ready PWA install experience](2026-09-03-mobile-pwa.md)
 - 2026-09-02 · feature · [Whole-app UI polish](2026-09-02-ui-polish.md)
