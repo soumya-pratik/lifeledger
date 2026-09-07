@@ -26,25 +26,15 @@ async function ledgerWeight(ledgerId: string): Promise<number> {
 }
 
 async function deleteLedgerData(ledgerId: string): Promise<void> {
-  await db.transaction(
-    "rw",
-    db.expenses,
-    db.incomes,
-    db.proposals,
-    db.importBatches,
-    db.categories,
-    db.members,
-    db.ledgers,
-    async () => {
-      await db.expenses.where("ledgerId").equals(ledgerId).delete();
-      await db.incomes.where("ledgerId").equals(ledgerId).delete();
-      await db.proposals.where("ledgerId").equals(ledgerId).delete();
-      await db.importBatches.where("ledgerId").equals(ledgerId).delete();
-      await db.categories.where("ledgerId").equals(ledgerId).delete();
-      await db.members.where("ledgerId").equals(ledgerId).delete();
-      await db.ledgers.delete(ledgerId);
-    },
-  );
+  await db.transaction("rw", [db.expenses, db.incomes, db.proposals, db.importBatches, db.categories, db.members, db.ledgers], async () => {
+    await db.expenses.where("ledgerId").equals(ledgerId).delete();
+    await db.incomes.where("ledgerId").equals(ledgerId).delete();
+    await db.proposals.where("ledgerId").equals(ledgerId).delete();
+    await db.importBatches.where("ledgerId").equals(ledgerId).delete();
+    await db.categories.where("ledgerId").equals(ledgerId).delete();
+    await db.members.where("ledgerId").equals(ledgerId).delete();
+    await db.ledgers.delete(ledgerId);
+  });
 }
 
 /** One personal book per user on this device. Keeps the ledger with the most data. */

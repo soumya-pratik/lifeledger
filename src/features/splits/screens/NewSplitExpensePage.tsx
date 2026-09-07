@@ -157,7 +157,7 @@ export function NewSplitExpensePage() {
         {mode !== "equal"
           ? involved.map((uid) => (
               <label key={uid} className="block text-xs text-ll-muted">
-                {memberLabel(members.find((m) => m.userId === uid) ?? { userId: uid, displayName: "", email: "", groupId: "", role: "member" }, userId)}{" "}
+                {memberLabel(members.find((m) => m.userId === uid) ?? { userId: uid, displayName: "", email: "" }, userId)}{" "}
                 ({mode === "exact" ? "₹" : mode === "percent" ? "%" : "shares"})
                 <input
                   value={extra[uid] ?? ""}
