@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSession } from "@/shared/auth/SessionProvider";
-import { homeFeatures, listFeatures, type AppFeature } from "@/shared/config/features";
+import { homeFeatures } from "@/shared/config/features";
+import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 import { FeatureIcon } from "@/shared/ui/FeatureIcon";
 import { PageHeader } from "@/shared/ui/chrome";
 
 export function HomePage() {
   const { displayName, ledger } = useSession();
-  const [features, setFeatures] = useState<AppFeature[]>([]);
-
-  useEffect(() => {
-    void listFeatures().then(setFeatures);
-  }, []);
-
+  const { features } = useEntitlements();
+  const location = useLocation();
+  const locked = (location.state as { planLocked?: string } | null)?.planLocked;
   const cards = homeFeatures(features);
 
   return (
@@ -22,6 +19,11 @@ export function HomePage() {
         title={`Hi, ${displayName}`}
         description={`Active ledger: ${ledger.name}. Open a module to continue.`}
       />
+      {locked === "splits" ? (
+        <p className="rounded-xl border border-ll-warn/40 bg-ll-surface px-4 py-3 text-sm text-ll-warn">
+          Splits is not enabled for your account. An admin can turn it on from Admin.
+        </p>
+      ) : null}
       <ul className="grid gap-4 sm:grid-cols-2">
         {cards.map((feature) => (
           <li key={feature.id}>

@@ -3,6 +3,71 @@ import { DEFAULT_CATEGORIES, type Ledger } from "@/shared/domain/ledger";
 import { newId } from "@/shared/lib/id";
 import { renameRentToHouseEmi } from "@/features/expenses/api";
 
+let workspaceChain: Promise<unknown> = Promise.resolve();
+
+function enqueueWorkspace<T>(fn: () => Promise<T>): Promise<T> {
+  const run = workspaceChain.then(fn, fn);
+  workspaceChain = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
+async function ledgerWeight(ledgerId: string): Promise<number> {
+  const expenses = await db.expenses
+    .where("ledgerId")
+    .equals(ledgerId)
+    .filter((e) => e.deletedAt == null)
+    .count();
+  const incomes = await db.incomes.where("ledgerId").equals(ledgerId).count();
+  const proposals = await db.proposals.where("ledgerId").equals(ledgerId).count();
+  return expenses * 1_000 + incomes * 100 + proposals;
+}
+
+async function deleteLedgerData(ledgerId: string): Promise<void> {
+  await db.transaction(
+    "rw",
+    db.expenses,
+    db.incomes,
+    db.proposals,
+    db.importBatches,
+    db.categories,
+    db.members,
+    db.ledgers,
+    async () => {
+      await db.expenses.where("ledgerId").equals(ledgerId).delete();
+      await db.incomes.where("ledgerId").equals(ledgerId).delete();
+      await db.proposals.where("ledgerId").equals(ledgerId).delete();
+      await db.importBatches.where("ledgerId").equals(ledgerId).delete();
+      await db.categories.where("ledgerId").equals(ledgerId).delete();
+      await db.members.where("ledgerId").equals(ledgerId).delete();
+      await db.ledgers.delete(ledgerId);
+    },
+  );
+}
+
+/** One personal book per user on this device. Keeps the ledger with the most data. */
+async function keepSingleLedger(userId: string, preferredId: string | undefined): Promise<Ledger[]> {
+  const owned = (await db.ledgers.toArray()).filter((l) => l.createdBy === userId);
+  if (owned.length <= 1) return owned;
+
+  const scored = await Promise.all(
+    owned.map(async (l) => ({ ledger: l, weight: await ledgerWeight(l.id) })),
+  );
+  scored.sort((a, b) => {
+    if (b.weight !== a.weight) return b.weight - a.weight;
+    if (preferredId && a.ledger.id === preferredId) return -1;
+    if (preferredId && b.ledger.id === preferredId) return 1;
+    return a.ledger.createdAt.localeCompare(b.ledger.createdAt);
+  });
+  const keep = scored[0].ledger;
+  for (const row of scored.slice(1)) {
+    await deleteLedgerData(row.ledger.id);
+  }
+  return [keep];
+}
+
 export type AuthProfile = {
   userId: string;
   email: string;
@@ -18,30 +83,22 @@ export async function ensureUserWorkspace(profile: AuthProfile): Promise<{
   ledger: Ledger;
   ledgers: Ledger[];
 }> {
+  return enqueueWorkspace(() => ensureUserWorkspaceInner(profile));
+}
+
+async function ensureUserWorkspaceInner(profile: AuthProfile): Promise<{
+  userId: string;
+  email: string;
+  displayName: string;
+  avatarUrl: string | null;
+  ledger: Ledger;
+  ledgers: Ledger[];
+}> {
   await renameRentToHouseEmi();
   const existing = await db.session.get("current");
-  if (existing?.userId === profile.userId) {
-    const ledger = await db.ledgers.get(existing.activeLedgerId);
-    if (ledger && ledger.createdBy === profile.userId) {
-      const ledgers = (await db.ledgers.toArray()).filter((l) => l.createdBy === profile.userId);
-      await db.session.put({
-        ...existing,
-        email: profile.email,
-        displayName: profile.displayName,
-        avatarUrl: profile.avatarUrl,
-      });
-      return {
-        userId: profile.userId,
-        email: profile.email,
-        displayName: profile.displayName,
-        avatarUrl: profile.avatarUrl,
-        ledger,
-        ledgers,
-      };
-    }
-  }
-
-  const owned = (await db.ledgers.toArray()).filter((l) => l.createdBy === profile.userId);
+  const preferredId =
+    existing?.userId === profile.userId ? existing.activeLedgerId : undefined;
+  const owned = await keepSingleLedger(profile.userId, preferredId);
   let ledger = owned.find((l) => l.kind === "personal") ?? owned[0];
 
   if (!ledger) {
@@ -77,7 +134,8 @@ export async function ensureUserWorkspace(profile: AuthProfile): Promise<{
     });
   }
 
-  const ledgers = (await db.ledgers.toArray()).filter((l) => l.createdBy === profile.userId);
+  const ledgers = await keepSingleLedger(profile.userId, ledger.id);
+  ledger = ledgers[0] ?? ledger;
   await db.session.put({
     id: "current",
     userId: profile.userId,

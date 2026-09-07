@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "@/shared/auth/SessionProvider";
 import { useTheme } from "@/shared/theme/ThemeProvider";
+import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 
 export function AppHeader({ onOpenNav }: { onOpenNav: () => void }) {
   const { displayName, email, avatarUrl, signOut } = useSession();
+  const { entitlements } = useEntitlements();
   const { theme, toggleBuiltin } = useTheme();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -76,6 +78,18 @@ export function AppHeader({ onOpenNav }: { onOpenNav: () => void }) {
               >
                 Settings
               </button>
+              {entitlements.role === "admin" ? (
+                <button
+                  type="button"
+                  className="block w-full px-3 py-2.5 text-left text-sm hover:bg-ll-bg"
+                  onClick={() => {
+                    setOpen(false);
+                    void navigate("/admin");
+                  }}
+                >
+                  Admin
+                </button>
+              ) : null}
               <button
                 type="button"
                 className="block w-full px-3 py-2.5 text-left text-sm text-ll-danger hover:bg-ll-bg"

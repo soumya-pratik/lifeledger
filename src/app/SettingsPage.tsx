@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSession } from "@/shared/auth/SessionProvider";
 import { hasLlmKey, saveLlmKey } from "@/features/imports/llm";
 import { useTheme } from "@/shared/theme/ThemeProvider";
+import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 import { GhostButton, PageHeader, PrimaryButton, Surface } from "@/shared/ui/chrome";
 
 function isStandalone(): boolean {
@@ -13,6 +14,7 @@ function isStandalone(): boolean {
 
 export function SettingsPage() {
   const { email, displayName, ledgers, ledger, switchLedger } = useSession();
+  const { entitlements } = useEntitlements();
   const { theme, themes, setTheme } = useTheme();
   const [key, setKey] = useState("");
   const [saved, setSaved] = useState(hasLlmKey());
@@ -26,6 +28,14 @@ export function SettingsPage() {
         <p className="mt-3 text-base font-medium text-ll-text">{displayName}</p>
         <p className="mt-1 text-ll-muted">{email}</p>
         <p className="mt-2 text-xs text-ll-muted">Signed in with Google via Supabase.</p>
+        <p className="mt-3 text-sm">
+          Role: <span className="font-medium">{entitlements.role}</span>
+          {" · "}
+          Plan: <span className="font-medium">{entitlements.planName}</span>
+        </p>
+        <p className="mt-1 text-xs text-ll-muted">
+          Admins see every module. For the user role, an admin enables Expenses and Splits per person.
+        </p>
       </Surface>
 
       <Surface>

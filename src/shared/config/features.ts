@@ -1,4 +1,4 @@
-export type FeatureIconId = "home" | "wallet";
+export type FeatureIconId = "home" | "wallet" | "split";
 
 export type AppFeature = {
   id: string;
@@ -14,8 +14,7 @@ export type AppFeature = {
 
 /**
  * Catalog of LifeLedger submodules for nav + home.
- * `enabled` is global today. Per-user on/off is D01 intent (see docs/log/2026-09-02-super-app-modules.md).
- * Later: load the same AppFeature shape from GET /features, then intersect with the user's module flags.
+ * `enabled` is a global kill-switch. Per-user access is role + profile_modules from Supabase.
  */
 export const APP_FEATURES: AppFeature[] = [
   {
@@ -40,10 +39,30 @@ export const APP_FEATURES: AppFeature[] = [
     showOnHome: true,
     enabled: true,
   },
+  {
+    id: "splits",
+    title: "Splits",
+    description: "Split bills with groups, track who owes whom, and settle up.",
+    path: "/splits",
+    icon: "split",
+    order: 2,
+    showInNav: true,
+    showOnHome: true,
+    enabled: true,
+  },
 ];
 
-export async function listFeatures(): Promise<AppFeature[]> {
-  return APP_FEATURES.filter((f) => f.enabled).sort((a, b) => a.order - b.order);
+export function catalogModuleIds(): string[] {
+  return APP_FEATURES.filter((f) => f.enabled).map((f) => f.id);
+}
+
+export function listFeatures(entitledModules: string[]): AppFeature[] {
+  const allowed = new Set(entitledModules);
+  return APP_FEATURES.filter((f) => {
+    if (!f.enabled) return false;
+    if (f.id === "home") return true;
+    return allowed.has(f.id);
+  }).sort((a, b) => a.order - b.order);
 }
 
 export function navFeatures(features: AppFeature[]): AppFeature[] {

@@ -15,6 +15,15 @@ export function FeatureIcon({ id, className }: { id: FeatureIconId; className?: 
       </svg>
     );
   }
+  if (id === "split") {
+    return (
+      <svg className={cls} viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="8" cy="8" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="16" cy="16" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M10 9.5 14 14.5M14 8l-4 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
   return (
     <svg className={cls} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path

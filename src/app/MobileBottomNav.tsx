@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { isNavActive, listFeatures, navFeatures, type AppFeature } from "@/shared/config/features";
+import { isNavActive, navFeatures } from "@/shared/config/features";
 import { FeatureIcon } from "@/shared/ui/FeatureIcon";
+import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 
 export function MobileBottomNav() {
-  const [features, setFeatures] = useState<AppFeature[]>([]);
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    void listFeatures().then(setFeatures);
-  }, []);
-
+  const { features, entitlements } = useEntitlements();
   const items = navFeatures(features).filter((f) => f.id !== "home" || f.showInNav);
 
   return (
@@ -32,11 +27,26 @@ export function MobileBottomNav() {
                 }`}
               >
                 <FeatureIcon id={item.icon} className="h-5 w-5" />
-                <span className="truncate">{item.title === "Expense tracker" ? "Expenses" : item.title}</span>
+                <span className="truncate">
+                  {item.title === "Expense tracker" ? "Expenses" : item.title}
+                </span>
               </NavLink>
             </li>
           );
         })}
+        {entitlements.role === "admin" ? (
+          <li className="flex-1">
+            <NavLink
+              to="/admin"
+              className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-2 text-[11px] font-medium ${
+                pathname.startsWith("/admin") ? "text-ll-accent" : "text-ll-muted"
+              }`}
+            >
+              <span className="text-sm font-bold">A</span>
+              <span>Admin</span>
+            </NavLink>
+          </li>
+        ) : null}
         <li className="flex-1">
           <NavLink
             to="/settings"

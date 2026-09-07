@@ -2,6 +2,9 @@
 
 Newest first. See [`README.md`](README.md) for how to append.
 
+- 2026-09-07 · feature · [Admin role, user list, per-user modules](2026-09-07-admin-role.md)
+- 2026-09-07 · feature · [Splits module and plan entitlements](2026-09-07-splits-module.md)
+- 2026-09-07 · feature · [One personal ledger on this device](2026-09-07-single-personal-ledger.md)
 - 2026-09-04 · feature · [Cloudflare Pages hosting](2026-09-04-cloudflare-pages.md)
 - 2026-09-03 · feature · [Category pie chart shows all categories with spend](2026-09-03-category-pie-chart-fix.md)
 - 2026-09-03 · feature · [Mobile-ready PWA install experience](2026-09-03-mobile-pwa.md)

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { isNavActive, listFeatures, navFeatures, type AppFeature } from "@/shared/config/features";
+import { isNavActive, navFeatures } from "@/shared/config/features";
 import { FeatureIcon } from "@/shared/ui/FeatureIcon";
+import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 
 const COLLAPSE_KEY = "lifeledger.navCollapsed";
 
@@ -13,12 +14,8 @@ export function AppSidebar({
   onNavigate?: () => void;
 }) {
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSE_KEY) === "1");
-  const [features, setFeatures] = useState<AppFeature[]>([]);
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    void listFeatures().then(setFeatures);
-  }, []);
+  const { features, entitlements } = useEntitlements();
 
   function toggleCollapse() {
     setCollapsed((c) => {
@@ -66,6 +63,21 @@ export function AppSidebar({
             </NavLink>
           );
         })}
+        {entitlements.role === "admin" ? (
+          <NavLink
+            to="/admin"
+            onClick={onNavigate}
+            title="Admin"
+            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${
+              pathname.startsWith("/admin")
+                ? "bg-ll-bg text-ll-accent shadow-[var(--ll-shadow)]"
+                : "text-ll-muted hover:bg-ll-bg hover:text-ll-text"
+            } ${compact ? "justify-center px-2" : ""}`}
+          >
+            <AdminNavIcon />
+            {compact ? <span className="sr-only">Admin</span> : "Admin"}
+          </NavLink>
+        ) : null}
       </nav>
       {variant === "desktop" ? (
         <button
@@ -80,5 +92,18 @@ export function AppSidebar({
         </button>
       ) : null}
     </aside>
+  );
+}
+
+function AdminNavIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3 4 7v4c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V7l-8-4Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

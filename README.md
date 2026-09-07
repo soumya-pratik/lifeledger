@@ -15,7 +15,7 @@ Open the URL Vite prints. You must **sign in with Google** (Gmail) before the ap
 ### Google + Supabase
 
 1. Create a [Supabase](https://supabase.com) project.
-2. Run `supabase/migrations/001_init.sql` in the SQL editor (optional until cloud sync).
+2. Run SQL in the editor: `supabase/migrations/001_init.sql` (optional until expense sync), then **`004_plans_and_splits.sql`**, then **`005_admin_roles.sql`**.
 3. Put `VITE_SUPABASE_URL` and the **anon** key in `.env`. Restart Vite.
 4. [Google Cloud Console](https://console.cloud.google.com/) → create an OAuth 2.0 **Web** client.
    - Authorized JavaScript origins: `http://localhost:5173` (and your production origin).
@@ -56,17 +56,26 @@ npx wrangler pages deploy dist --project-name lifeledger
 
 ## App shell
 
-- Left nav and Home cards are driven by [`src/shared/config/features.ts`](src/shared/config/features.ts). Add a feature object there to register a new section.
-- Expense tracker lives at `/expenses`; statement import is `/expenses/import`.
-- Themes use CSS variables (`--ll-*`) via [`src/shared/theme`](src/shared/theme). Light and dark are builtin; `cacheRemoteThemes()` is the hook for backend packs.
+- Left nav and Home cards are [`src/shared/config/features.ts`](src/shared/config/features.ts) intersected with **role + `profile_modules`**. Admins get every catalog module. `/admin` is admin-only (not a grantable module).
+- Expense tracker: `/expenses`. Splits (if enabled for that user): `/splits`.
+- Themes use CSS variables (`--ll-*`) via [`src/shared/theme`](src/shared/theme).
 
 ## Modules
 
 - `src/features/expenses` — capture, list, totals, accept/reject imported rows. Owns the expense contract.
 - `src/features/imports` — CSV parse (no LLM), optional LLM extract if CSV is empty, month review LLM. Writes **proposals** through `proposeImported`.
-- `src/shared/domain/expense.ts` — the shared model. Do not invent a second expense shape.
+- `src/features/splits` — group bills, balances, settle up (Supabase). Gated per user by an admin. Does not use expense-tracker tables.
 
 Expense UI sections: **You entered** vs **From bank statements** (pending review, then committed with `origin: statement`).
+
+## Admin and module access
+
+1. Apply [`004_plans_and_splits.sql`](supabase/migrations/004_plans_and_splits.sql), then [`005_admin_roles.sql`](supabase/migrations/005_admin_roles.sql).
+2. Sign in once with the Google account that should be admin so `auth.users` exists, then run `005` (it seeds that Auth email as admin). The email is only in SQL, not in the React app.
+3. After refresh, **Admin** appears in nav. From `/admin`, set each person’s role and toggle Expenses / Splits. New **user** signups get the Free catalog (Home + Expenses) until an admin adds Splits.
+4. Invitees must already have a LifeLedger Google login. Keep localhost **and** Pages URLs in Supabase redirect allow-list.
+
+Phase 1: groups, equal/exact/shares/percent splits, balances, settle up. Not yet: friends 1:1, simplify debts, comments, receipts.
 
 ## CSV
 
