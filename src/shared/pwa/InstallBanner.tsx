@@ -54,11 +54,53 @@ export function InstallBanner() {
     setDeferred(null);
   }
 
+  useEffect(() => {
+    if (dismissed || isStandalone()) return;
+    if (!deferred && !iosHint) return;
+    const id = requestAnimationFrame(() => {
+      const banner = document.querySelector("[data-ll-install-banner]");
+      const nav = document.querySelector("nav[aria-label='Main']");
+      const br = banner?.getBoundingClientRect();
+      const nr = nav?.getBoundingClientRect();
+      const overlap =
+        br && nr ? !(br.bottom <= nr.top || br.top >= nr.bottom || br.right <= nr.left || br.left >= nr.right) : false;
+      // #region agent log
+      fetch("http://127.0.0.1:7276/ingest/9e733f63-913b-4a5e-ab8d-47371ed54f20", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "db2b60" },
+        body: JSON.stringify({
+          sessionId: "db2b60",
+          runId: "post-fix",
+          hypothesisId: "H1",
+          location: "src/shared/pwa/InstallBanner.tsx:layout",
+          message: "install banner vs bottom nav geometry",
+          data: {
+            vw: window.innerWidth,
+            vh: window.innerHeight,
+            banner: br ? { top: br.top, bottom: br.bottom, height: br.height } : null,
+            nav: nr ? { top: nr.top, bottom: nr.bottom, height: nr.height, z: nr ? getComputedStyle(nav!).zIndex : null } : null,
+            overlap,
+            bannerZ: banner ? getComputedStyle(banner).zIndex : null,
+            bannerPosition: banner ? getComputedStyle(banner).position : null,
+            iosHint,
+            hasDeferred: !!deferred,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+    });
+    return () => cancelAnimationFrame(id);
+  }, [dismissed, deferred, iosHint]);
+
   if (dismissed || isStandalone()) return null;
   if (!deferred && !iosHint) return null;
 
   return (
-    <div className="border-t border-ll-border bg-ll-surface px-4 py-3 shadow-[var(--ll-shadow)]">
+    <div
+      data-ll-install-banner
+      className="border-t border-ll-border bg-ll-surface px-4 py-3 shadow-[var(--ll-shadow)]"
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm font-medium text-ll-text">Install LifeLedger</p>

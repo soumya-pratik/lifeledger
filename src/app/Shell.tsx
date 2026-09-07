@@ -33,10 +33,10 @@ export function Shell() {
             <Outlet />
           </div>
         </main>
-        <div className="md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col md:hidden">
           <InstallBanner />
+          <MobileBottomNav />
         </div>
-        <MobileBottomNav />
       </div>
     </div>
   );

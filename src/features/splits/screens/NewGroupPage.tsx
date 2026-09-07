@@ -23,6 +23,21 @@ export function NewGroupPage() {
       const g = await createGroup({ name, kind, userId });
       navigate(`/splits/groups/${g.id}`);
     } catch (err) {
+      // #region agent log
+      fetch("http://127.0.0.1:7276/ingest/9e733f63-913b-4a5e-ab8d-47371ed54f20", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "db2b60" },
+        body: JSON.stringify({
+          sessionId: "db2b60",
+            runId: "post-fix",
+          hypothesisId: "H4",
+          location: "src/features/splits/screens/NewGroupPage.tsx:onSubmit",
+          message: "create group caught",
+          data: { errMessage: err instanceof Error ? err.message : String(err) },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       setError(err instanceof Error ? err.message : "Could not create group");
     } finally {
       setBusy(false);

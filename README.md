@@ -15,7 +15,7 @@ Open the URL Vite prints. You must **sign in with Google** (Gmail) before the ap
 ### Google + Supabase
 
 1. Create a [Supabase](https://supabase.com) project.
-2. Run SQL in the editor: `supabase/migrations/001_init.sql` (optional until expense sync), then **`004_plans_and_splits.sql`**, then **`005_admin_roles.sql`**.
+2. Run SQL in the editor: `supabase/migrations/001_init.sql` (optional until expense sync), then **`004_plans_and_splits.sql`**, then **`005_admin_roles.sql`**, then **`006_create_split_group.sql`**.
 3. Put `VITE_SUPABASE_URL` and the **anon** key in `.env`. Restart Vite.
 4. [Google Cloud Console](https://console.cloud.google.com/) → create an OAuth 2.0 **Web** client.
    - Authorized JavaScript origins: `http://localhost:5173` (and your production origin).
@@ -71,7 +71,7 @@ Expense UI sections: **You entered** vs **From bank statements** (pending review
 
 ## Admin and module access
 
-1. Apply [`004_plans_and_splits.sql`](supabase/migrations/004_plans_and_splits.sql), then [`005_admin_roles.sql`](supabase/migrations/005_admin_roles.sql).
+1. Apply [`004_plans_and_splits.sql`](supabase/migrations/004_plans_and_splits.sql), then [`005_admin_roles.sql`](supabase/migrations/005_admin_roles.sql), then [`006_create_split_group.sql`](supabase/migrations/006_create_split_group.sql).
 2. Sign in once with the Google account that should be admin so `auth.users` exists, then run `005` (it seeds that Auth email as admin). The email is only in SQL, not in the React app.
 3. After refresh, **Admin** appears in nav. From `/admin`, set each person’s role and toggle Expenses / Splits. New **user** signups get the Free catalog (Home + Expenses) until an admin adds Splits.
 4. Invitees must already have a LifeLedger Google login. Keep localhost **and** Pages URLs in Supabase redirect allow-list.

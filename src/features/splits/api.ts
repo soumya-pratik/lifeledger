@@ -47,25 +47,84 @@ export async function createGroup(input: {
   userId: string;
 }): Promise<SplitGroup> {
   const client = requireClient();
-  const { data, error } = await client
-    .from("split_groups")
-    .insert({ name: input.name.trim(), kind: input.kind, created_by: input.userId, currency: "INR" })
-    .select("id, name, kind, currency, created_by, created_at")
-    .single();
-  if (error) throw error;
-  const { error: memError } = await client.from("split_group_members").insert({
-    group_id: data.id,
-    user_id: input.userId,
-    role: "owner",
+  // #region agent log
+  fetch("http://127.0.0.1:7276/ingest/9e733f63-913b-4a5e-ab8d-47371ed54f20", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "db2b60" },
+    body: JSON.stringify({
+      sessionId: "db2b60",
+      runId: "post-fix",
+      hypothesisId: "H5",
+      location: "src/features/splits/api.ts:createGroup:entry",
+      message: "createGroup start",
+      data: {
+        hasClient: !!client,
+        kind: input.kind,
+        nameLen: input.name.trim().length,
+        userIdLen: input.userId.length,
+        userIdPrefix: input.userId.slice(0, 8),
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+  const { data, error } = await client.rpc("create_split_group", {
+    p_name: input.name.trim(),
+    p_kind: input.kind,
   });
-  if (memError) throw memError;
+  if (error) {
+    // #region agent log
+    fetch("http://127.0.0.1:7276/ingest/9e733f63-913b-4a5e-ab8d-47371ed54f20", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "db2b60" },
+      body: JSON.stringify({
+        sessionId: "db2b60",
+        runId: "post-fix",
+        hypothesisId: "H4",
+        location: "src/features/splits/api.ts:createGroup:rpc",
+        message: "create_split_group rpc failed",
+        data: {
+          code: error.code,
+          errMessage: error.message,
+          details: error.details,
+          hint: error.hint,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+    throw error;
+  }
+  // #region agent log
+  fetch("http://127.0.0.1:7276/ingest/9e733f63-913b-4a5e-ab8d-47371ed54f20", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "db2b60" },
+    body: JSON.stringify({
+      sessionId: "db2b60",
+      runId: "post-fix",
+      hypothesisId: "H4",
+      location: "src/features/splits/api.ts:createGroup:rpcOk",
+      message: "create_split_group rpc ok",
+      data: { hasId: !!(data as { id?: string } | null)?.id, kind: input.kind },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+  const row = data as {
+    id: string;
+    name: string;
+    kind: SplitGroupKind;
+    currency: string;
+    created_by: string;
+    created_at: string;
+  };
   return {
-    id: data.id as string,
-    name: data.name as string,
-    kind: data.kind as SplitGroupKind,
-    currency: data.currency as string,
-    createdBy: data.created_by as string,
-    createdAt: data.created_at as string,
+    id: row.id,
+    name: row.name,
+    kind: row.kind,
+    currency: row.currency,
+    createdBy: row.created_by,
+    createdAt: row.created_at,
   };
 }
 

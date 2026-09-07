@@ -14,7 +14,7 @@ body {
 }
 
 .shell-main {
-  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(9.5rem + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {

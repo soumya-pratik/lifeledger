@@ -10,7 +10,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-ll-border bg-ll-header/95 backdrop-blur-md md:hidden"
+      className="border-t border-ll-border bg-ll-header/95 backdrop-blur-md"
       style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       aria-label="Main"
     >
