@@ -2,6 +2,7 @@
 
 Newest first. See [`README.md`](README.md) for how to append.
 
+- 2026-09-07 · feature · [Shareable app link in Settings](2026-09-07-share-app-link.md)
 - 2026-09-07 · feature · [Admin role, user list, per-user modules](2026-09-07-admin-role.md)
 - 2026-09-07 · feature · [Splits module and plan entitlements](2026-09-07-splits-module.md)
 - 2026-09-07 · feature · [One personal ledger on this device](2026-09-07-single-personal-ledger.md)

@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "@/shared/auth/SessionProvider";
 import { hasLlmKey, saveLlmKey } from "@/features/imports/llm";
 import { useTheme } from "@/shared/theme/ThemeProvider";
 import { useEntitlements } from "@/shared/entitlements/EntitlementsProvider";
 import { GhostButton, PageHeader, PrimaryButton, Surface } from "@/shared/ui/chrome";
+
+function appShareUrl(): string {
+  const fromEnv = import.meta.env.VITE_PUBLIC_APP_URL?.trim().replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  return window.location.origin;
+}
 
 function isStandalone(): boolean {
   return (
@@ -18,6 +24,9 @@ export function SettingsPage() {
   const { theme, themes, setTheme } = useTheme();
   const [key, setKey] = useState("");
   const [saved, setSaved] = useState(hasLlmKey());
+  const [copied, setCopied] = useState(false);
+  const shareUrl = useMemo(() => appShareUrl(), []);
+  const canNativeShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
 
   return (
     <div className="space-y-6">
@@ -36,6 +45,48 @@ export function SettingsPage() {
         <p className="mt-1 text-xs text-ll-muted">
           Admins see every module. For the user role, an admin enables Expenses and Splits per person.
         </p>
+      </Surface>
+
+      <Surface>
+        <h2 className="text-sm font-semibold">Share LifeLedger</h2>
+        <p className="mt-1 text-xs text-ll-muted">
+          Forward this link. They sign in with Google; an admin can then enable modules for them.
+        </p>
+        <input
+          readOnly
+          value={shareUrl}
+          onFocus={(e) => e.target.select()}
+          className="mt-4 w-full rounded-xl border border-ll-border bg-ll-bg px-3 py-2.5 text-sm"
+          aria-label="App link"
+        />
+        <div className="mt-3 flex flex-wrap gap-2">
+          <PrimaryButton
+            onClick={() => {
+              void navigator.clipboard.writeText(shareUrl).then(
+                () => {
+                  setCopied(true);
+                  window.setTimeout(() => setCopied(false), 2000);
+                },
+                () => undefined,
+              );
+            }}
+          >
+            {copied ? "Copied" : "Copy link"}
+          </PrimaryButton>
+          {canNativeShare ? (
+            <GhostButton
+              onClick={() => {
+                void navigator.share({
+                  title: "LifeLedger",
+                  text: "Open LifeLedger and sign in with Google.",
+                  url: shareUrl,
+                }).catch(() => undefined);
+              }}
+            >
+              Share…
+            </GhostButton>
+          ) : null}
+        </div>
       </Surface>
 
       <Surface>

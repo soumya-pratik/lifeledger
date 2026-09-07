@@ -41,6 +41,7 @@ The app is a static Vite SPA. Host it on [Cloudflare Pages](https://developers.c
 3. **Environment variables** (Production, and Preview if you want Google login on preview URLs). Vite inlines these at **build** time — change them and trigger a new deploy:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY` (anon key only)
+   - Optional `VITE_PUBLIC_APP_URL` — canonical site URL shown in Settings (use this so localhost still copies the Pages URL)
    - Do **not** set `VITE_LLM_API_KEY`; users paste a key in Settings.
 4. After the first deploy, add the `https://<project>.pages.dev` origin to Google OAuth (JavaScript origin) and Supabase redirect URLs (step 6 above).
 5. Smoke-test: hard-reload `/`, `/expenses`, and `/settings`; sign in with Google; install from a phone.
